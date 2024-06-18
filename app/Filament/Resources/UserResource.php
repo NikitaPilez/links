@@ -4,6 +4,8 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\UserResource\Pages;
 use App\Filament\Resources\UserResource\RelationManagers;
+use App\Models\Blogger;
+use App\Models\Link;
 use App\Models\User;
 use Filament\Forms;
 use Filament\Resources\Form;
@@ -11,10 +13,6 @@ use Filament\Resources\Resource;
 use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
-use Illuminate\Contracts\Support\Htmlable;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
@@ -50,10 +48,12 @@ class UserResource extends Resource
                 Forms\Components\Select::make('bloggers')
                     ->relationship('bloggers', 'name')
                     ->multiple()
+                    ->options(Blogger::pluck('name', 'id')->toArray())
                     ->label('Блоггеры'),
                 Forms\Components\Select::make('links')
                     ->relationship('links', 'name')
                     ->multiple()
+                    ->options(Link::pluck('name', 'id')->toArray())
                     ->label('Ссылки'),
             ]);
     }
