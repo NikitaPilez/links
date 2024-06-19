@@ -8,18 +8,19 @@ use App\Models\Blogger;
 use App\Models\Link;
 use App\Models\User;
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 
 class UserResource extends Resource
 {
     protected static ?string $model = User::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationLabel = 'Пользователи';
 
@@ -64,10 +65,10 @@ class UserResource extends Resource
             ->columns([
                 TextColumn::make('name')->sortable()->searchable(),
                 TextColumn::make('email')->sortable()->searchable(),
-                TextColumn::make('role')->sortable()->searchable()->enum([
-                    1 => 'Admin',
-                    0 => 'Manager',
-                ]),
+                TextColumn::make('role')->sortable()->searchable()
+                    ->formatStateUsing(function ($state) {
+                    return $state === 1 ? 'Админ' : 'Менеджер';
+                }),
             ])
             ->filters([
                 //
@@ -76,7 +77,9 @@ class UserResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 
@@ -96,7 +99,12 @@ class UserResource extends Resource
         ];
     }
 
-    protected static function shouldRegisterNavigation(): bool
+    public static function can(string $action, ?Model $record = null): bool
+    {
+        return auth()->user()->isAdmin();
+    }
+
+    public static function shouldRegisterNavigation(): bool
     {
         return auth()->user()->isAdmin();
     }

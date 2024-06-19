@@ -5,7 +5,7 @@ namespace App\Filament\Resources\GenerateLinkResource\Pages;
 use App\Filament\Resources\GenerateLinkResource;
 use App\Models\Blogger;
 use App\Models\Domain;
-use Filament\Pages\Actions;
+use Filament\Actions;
 use Filament\Resources\Pages\EditRecord;
 use Illuminate\Database\Eloquent\Model;
 
@@ -13,7 +13,7 @@ class EditGenerateLink extends EditRecord
 {
     protected static string $resource = GenerateLinkResource::class;
 
-    protected function getActions(): array
+    protected function getHeaderActions(): array
     {
         return [
             Actions\DeleteAction::make(),

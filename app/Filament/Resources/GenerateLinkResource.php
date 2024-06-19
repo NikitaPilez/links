@@ -10,20 +10,20 @@ use App\Models\GenerateLink;
 use App\Models\Link;
 use App\Models\User;
 use Filament\Forms;
-use Filament\Resources\Form;
+use Filament\Forms\Form;
 use Filament\Resources\Resource;
-use Filament\Resources\Table;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
+use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Illuminate\Database\Eloquent\Model;
 
 class GenerateLinkResource extends Resource
 {
     protected static ?string $model = GenerateLink::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     protected static ?string $navigationLabel = 'Сгенерированные ссылки';
 
@@ -125,7 +125,9 @@ class GenerateLinkResource extends Resource
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
-                Tables\Actions\DeleteBulkAction::make(),
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+                ]),
             ]);
     }
 
@@ -143,5 +145,34 @@ class GenerateLinkResource extends Resource
             'create' => Pages\CreateGenerateLink::route('/create'),
             'edit' => Pages\EditGenerateLink::route('/{record}/edit'),
         ];
+    }
+
+    public static function getEloquentQuery(): Builder
+    {
+        /** @var Model $model */
+        $model = static::getModel();
+        $query = $model::query();
+
+        /** @var User $user */
+        $user = auth()->user();
+
+        if ($user->role == 0) {
+            $query->where('user_id', $user->id);
+        }
+
+        return $query;
+    }
+
+    public static function canEdit(Model $record): bool
+    {
+        $user = auth()->user();
+
+        if ($user->isAdmin()) {
+            return true;
+        }
+
+        $generatedLinks = GenerateLink::query()->where('user_id', $user->id)->pluck('id')->toArray();
+
+        return in_array($record->id, $generatedLinks);
     }
 }

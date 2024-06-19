@@ -5,7 +5,6 @@ namespace App\Filament\Resources\GenerateLinkResource\Pages;
 use App\Filament\Resources\GenerateLinkResource;
 use App\Models\Blogger;
 use App\Models\Domain;
-use Filament\Pages\Actions;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 
