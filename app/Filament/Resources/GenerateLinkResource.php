@@ -83,7 +83,11 @@ class GenerateLinkResource extends Resource
                 TextColumn::make('blogger.name')->sortable()->searchable()->label('Блоггер'),
                 TextColumn::make('domain.name')->sortable()->searchable()->label('Домен'),
                 TextColumn::make('scenario')->sortable()->searchable()->label('Сценарий'),
-                TextColumn::make('generated_link')->sortable()->searchable()->label('Сгенерированная ссылка'),
+                TextColumn::make('generated_link')
+                    ->copyable()
+                    ->copyableState(fn (string $state): string => "https://{$state}")
+                    ->sortable()
+                    ->searchable()->label('Сгенерированная ссылка'),
             ])
             ->filters([
                 Filter::make('blogger')
