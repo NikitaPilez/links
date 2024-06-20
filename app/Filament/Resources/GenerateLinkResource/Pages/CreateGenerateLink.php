@@ -21,7 +21,7 @@ class CreateGenerateLink extends CreateRecord
         $blogger = Blogger::find($bloggerId);
         $domain = Domain::find($domainId);
 
-        $generateLink = $domain->name . '/' . $blogger->alias . $scenario;
+        $generateLink = $domain->name . '/' . $blogger->alias . '/' . $scenario;
 
         return parent::handleRecordCreation([
             'blogger_id' => $bloggerId,

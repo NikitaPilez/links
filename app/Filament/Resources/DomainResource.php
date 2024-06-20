@@ -6,6 +6,7 @@ use App\Filament\Resources\DomainResource\Pages;
 use App\Filament\Resources\DomainResource\RelationManagers;
 use App\Models\Domain;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -24,8 +25,12 @@ class DomainResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')->label('Имя')->required(),
-                Forms\Components\Checkbox::make('is_active')->label('Активен?'),
+                Section::make('Основное')
+                    ->collapsible()
+                    ->schema([
+                        Forms\Components\TextInput::make('name')->label('Домен')->required(),
+                        Forms\Components\Toggle::make('is_active')->label('Активен?'),
+                    ]),
             ]);
     }
 
@@ -33,7 +38,7 @@ class DomainResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('name')->toggleable()->searchable()->label('Имя'),
+                Tables\Columns\TextColumn::make('name')->toggleable()->searchable()->label('Домен'),
                 Tables\Columns\CheckboxColumn::make('is_active')->toggleable()->searchable()->label('Активен?'),
             ])
             ->filters([

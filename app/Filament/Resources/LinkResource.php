@@ -7,6 +7,7 @@ use App\Filament\Resources\LinkResource\RelationManagers;
 use App\Models\Link;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -26,8 +27,12 @@ class LinkResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')->label('Имя')->required(),
-                Forms\Components\TextInput::make('url')->label('Ссылка')->required(),
+                Section::make('Основное')
+                    ->collapsible()
+                    ->schema([
+                        Forms\Components\TextInput::make('name')->label('Имя')->required(),
+                        Forms\Components\TextInput::make('url')->label('Ссылка')->required(),
+                    ]),
             ]);
     }
 

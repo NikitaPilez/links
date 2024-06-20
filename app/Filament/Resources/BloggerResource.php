@@ -7,6 +7,7 @@ use App\Filament\Resources\BloggerResource\RelationManagers;
 use App\Models\Blogger;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -26,9 +27,13 @@ class BloggerResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')->label('Имя')->required(),
-                Forms\Components\TextInput::make('alias')->label('Алиас')->required(),
-                Forms\Components\TextInput::make('comment')->label('Комментарий'),
+                Section::make('Основное')
+                    ->collapsible()
+                    ->schema([
+                        Forms\Components\TextInput::make('name')->label('Имя')->required(),
+                        Forms\Components\TextInput::make('alias')->label('Алиас')->required(),
+                        Forms\Components\TextInput::make('comment')->label('Комментарий'),
+                    ]),
             ]);
     }
 

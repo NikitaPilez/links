@@ -10,6 +10,7 @@ use App\Models\GenerateLink;
 use App\Models\Link;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -31,47 +32,52 @@ class GenerateLinkResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\Select::make('link_id')
-                    ->relationship('link', 'name')
-                    ->searchable()
-                    ->preload()
-                    ->options(function () {
-                        $user = auth()->user();
+                Section::make('Основное')
+                    ->collapsible()
+                    ->schema([
+                    Forms\Components\Select::make('link_id')
+                        ->relationship('link', 'name')
+                        ->searchable()
+                        ->preload()
+                        ->options(function () {
+                            $user = auth()->user();
 
-                        if ($user->role === 1) {
-                            return Link::pluck('name', 'id');
-                        }
+                            if ($user->role === 1) {
+                                return Link::pluck('name', 'id');
+                            }
 
-                        return $user->links()->pluck('name', 'links.id');
-                    })
-                    ->label('Ссылка')
-                    ->required(),
-                Forms\Components\Select::make('blogger_id')
-                    ->relationship('blogger', 'name')
-                    ->options(function () {
-                        $user = auth()->user();
+                            return $user->links()->pluck('name', 'links.id');
+                        })
+                        ->label('Ссылка')
+                        ->required(),
+                    Forms\Components\Select::make('blogger_id')
+                        ->relationship('blogger', 'name')
+                        ->options(function () {
+                            $user = auth()->user();
 
-                        if ($user->role === 1) {
-                            return Blogger::pluck('name', 'id');
-                        }
+                            if ($user->role === 1) {
+                                return Blogger::pluck('name', 'id');
+                            }
 
-                        return $user->bloggers()->pluck('name', 'bloggers.id');
-                    })
-                    ->searchable()
-                    ->preload()
-                    ->required()
-                    ->label('Блогер'),
-                Forms\Components\Select::make('domain_id')
-                    ->relationship('domain', 'name')
-                    ->options(function () {
-                        return Domain::where('is_active', true)->pluck('name', 'id');
-                    })
-                    ->searchable()
-                    ->preload()
-                    ->required()
-                    ->label('Домен'),
-                Forms\Components\TextInput::make('scenario')
-                    ->required(),
+                            return $user->bloggers()->pluck('name', 'bloggers.id');
+                        })
+                        ->searchable()
+                        ->preload()
+                        ->required()
+                        ->label('Блогер'),
+                    Forms\Components\Select::make('domain_id')
+                        ->relationship('domain', 'name')
+                        ->options(function () {
+                            return Domain::where('is_active', true)->pluck('name', 'id');
+                        })
+                        ->searchable()
+                        ->preload()
+                        ->required()
+                        ->label('Домен'),
+                    Forms\Components\TextInput::make('scenario')
+                        ->label('Сценарий')
+                        ->required(),
+                ]),
             ]);
     }
 

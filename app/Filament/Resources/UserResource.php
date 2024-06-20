@@ -8,6 +8,7 @@ use App\Models\Blogger;
 use App\Models\Link;
 use App\Models\User;
 use Filament\Forms;
+use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -28,34 +29,38 @@ class UserResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('email')
-                    ->email()
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('password')
-                    ->password()
-                    ->required(fn ($record) => $record === null)
-                    ->maxLength(255)
-                    ->dehydrateStateUsing(fn ($state) => $state ? Hash::make($state) : null)->dehydrated(fn ($state) => filled($state)),
-                Forms\Components\Select::make('role')
-                    ->options([
-                        1 => 'Admin',
-                        0 => 'Manager',
-                    ])
-                    ->required(),
-                Forms\Components\Select::make('bloggers')
-                    ->relationship('bloggers', 'name')
-                    ->multiple()
-                    ->options(Blogger::pluck('name', 'id')->toArray())
-                    ->label('Блоггеры'),
-                Forms\Components\Select::make('links')
-                    ->relationship('links', 'name')
-                    ->multiple()
-                    ->options(Link::pluck('name', 'id')->toArray())
-                    ->label('Ссылки'),
+                Section::make('Основное')
+                    ->collapsible()
+                    ->schema([
+                        Forms\Components\TextInput::make('name')
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('email')
+                            ->email()
+                            ->required()
+                            ->maxLength(255),
+                        Forms\Components\TextInput::make('password')
+                            ->password()
+                            ->required(fn ($record) => $record === null)
+                            ->maxLength(255)
+                            ->dehydrateStateUsing(fn ($state) => $state ? Hash::make($state) : null)->dehydrated(fn ($state) => filled($state)),
+                        Forms\Components\Select::make('role')
+                            ->options([
+                                1 => 'Admin',
+                                0 => 'Manager',
+                            ])
+                            ->required(),
+                        Forms\Components\Select::make('bloggers')
+                            ->relationship('bloggers', 'name')
+                            ->multiple()
+                            ->options(Blogger::pluck('name', 'id')->toArray())
+                            ->label('Блоггеры'),
+                        Forms\Components\Select::make('links')
+                            ->relationship('links', 'name')
+                            ->multiple()
+                            ->options(Link::pluck('name', 'id')->toArray())
+                            ->label('Ссылки'),
+                    ]),
             ]);
     }
 

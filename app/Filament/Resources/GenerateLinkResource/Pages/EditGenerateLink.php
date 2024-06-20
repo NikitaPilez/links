@@ -29,7 +29,7 @@ class EditGenerateLink extends EditRecord
         $blogger = Blogger::find($bloggerId);
         $domain = Domain::find($domainId);
 
-        $generateLink = $domain->name . '/' . $blogger->alias . $scenario;
+        $generateLink = $domain->name . '/' . $blogger->alias . '/' . $scenario;
 
         $record->update([
             'blogger_id' => $bloggerId,
