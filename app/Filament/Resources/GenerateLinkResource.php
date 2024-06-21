@@ -39,6 +39,15 @@ class GenerateLinkResource extends Resource
                         ->relationship('link', 'name')
                         ->searchable()
                         ->preload()
+                        ->default(function () {
+                            $linkId = request()->get('link_id');
+
+                            if ($linkId) {
+                                return Link::where('id', $linkId)->first()->id;
+                            }
+
+                            return null;
+                        })
                         ->options(function () {
                             $user = auth()->user();
 

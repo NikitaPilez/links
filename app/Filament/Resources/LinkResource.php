@@ -11,6 +11,7 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
@@ -48,6 +49,12 @@ class LinkResource extends Resource
             ])
             ->actions([
                 Tables\Actions\EditAction::make(),
+                Action::make('create-link')
+                    ->label('Сгенерировать')
+                    ->url(fn ($record) => route('filament.admin.resources.generate-links.create', [
+                        'link_id' => $record->id,
+                    ]))
+                    ->icon('heroicon-o-plus')
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
