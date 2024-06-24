@@ -11,6 +11,7 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Facades\DB;
 
@@ -33,7 +34,7 @@ class RedirectResource extends Resource
         return $table
             ->columns([
                 Tables\Columns\TextColumn::make('date')->label('Дата'),
-                Tables\Columns\TextColumn::make('geo')->label('Гео'),
+                Tables\Columns\TextColumn::make('count')->label('Кол-во'),
             ])
             ->filters([
                 //
@@ -68,15 +69,26 @@ class RedirectResource extends Resource
     {
         $query = static::$model::query();
 
+//        $query
+//            ->select(
+//                DB::raw('ANY_VALUE(id) as id'),
+//                DB::raw('DATE(created_at) as date'),
+//                'geo',
+////                DB::raw('COUNT(*) as redirect_count')
+//            )
+//            ->groupBy('date')->orderBy('date');
+
         $query->select(
-            DB::raw('MAX(id) as id'),
-            'geo',
+            DB::raw('COUNT(id) as count'),
             DB::raw('DATE(created_at) as date'),
         )
-            ->groupBy(DB::raw('DATE(created_at)'))->orderBy('date', 'DESC');
+            ->groupBy('date')->orderBy('date');
 
         return $query;
     }
 
-
+    public static function canEdit(Model $record): bool
+    {
+        return false;
+    }
 }
