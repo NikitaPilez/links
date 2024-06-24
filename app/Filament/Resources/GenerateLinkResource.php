@@ -98,6 +98,7 @@ class GenerateLinkResource extends Resource
                 TextColumn::make('blogger.name')->sortable()->searchable()->label('Блоггер'),
                 TextColumn::make('domain.name')->sortable()->searchable()->label('Домен'),
                 TextColumn::make('scenario')->sortable()->searchable()->label('Сценарий'),
+                TextColumn::make('generate_link_count')->sortable()->label('Кол-во переходов'),
                 TextColumn::make('generated_link')
                     ->copyable()
                     ->copyableState(fn (string $state): string => "https://{$state}")
@@ -170,7 +171,7 @@ class GenerateLinkResource extends Resource
     {
         /** @var Model $model */
         $model = static::getModel();
-        $query = $model::query();
+        $query = $model::query()->with('redirects');
 
         /** @var User $user */
         $user = auth()->user();

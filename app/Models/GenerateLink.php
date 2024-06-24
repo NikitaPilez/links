@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class GenerateLink extends Model
 {
@@ -37,5 +39,17 @@ class GenerateLink extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function redirects(): HasMany
+    {
+        return $this->hasMany(Redirect::class);
+    }
+
+    public function generateLinkCount(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => $this->redirects->count(),
+        );
     }
 }
