@@ -54,6 +54,16 @@
                     <button type="submit" class="btn btn-outline-primary mt-2 ml-2">Применить</button>
                 </form>
 
+                <div class="flex justify-end mb-4">
+                    <form method="GET" action="{{ route('filament.admin.pages.export-csv') }}">
+                        <input type="hidden" name="mode" value="{{ request('mode') }}">
+                        <input type="hidden" name="date_from" value="{{ request('date_from') }}">
+                        <input type="hidden" name="date_to" value="{{ request('date_to') }}">
+                        <input type="hidden" name="geo" value="{{ json_encode(request('geo', [])) }}">
+                        <button type="submit" class="btn btn-primary">Выгрузка в CSV</button>
+                    </form>
+                </div>
+
                 <div class="py-2 align-middle inline-block min-w-full w-full">
                     <div class="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg w-full">
                         <table class="min-w-full w-full divide-y divide-gray-200">
@@ -79,15 +89,7 @@
                             @foreach ($redirects as $redirect)
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        @if($mode === 'date')
-                                            {{ $redirect->date }}
-                                        @elseif($mode === 'geo')
-                                            {{ $redirect->geo }}
-                                        @elseif($mode === 'blogger')
-                                            {{ $redirect->name }}
-                                        @elseif($mode === 'scenario')
-                                            {{ $redirect->scenario }}
-                                        @endif
+                                        {{ $redirect->field }}
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{{ $redirect->count }}</td>
                                 </tr>
@@ -104,4 +106,3 @@
         </div>
     </div>
 </x-filament::page>
-
