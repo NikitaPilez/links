@@ -33,6 +33,10 @@ class RedirectController extends Controller
             $field = 'Блоггер';
         } else if ($mode === 'scenario') {
             $field = 'Сценарий';
+        } else if ($mode === 'link') {
+            $field = 'Ссылка';
+        } else if ($mode === 'generate_link') {
+            $field = 'Сгенерированная ссылка';
         }
 
         $columns = [$field ?? '', 'Кол-во'];

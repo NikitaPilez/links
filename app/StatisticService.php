@@ -55,6 +55,19 @@ class StatisticService
                 DB::raw('gl.scenario as field'),
             ];
             $groupBy = 'gl.scenario';
+        } else if ($mode === 'link') {
+            $selects = [
+                DB::raw('COUNT(gl.id) as count'),
+                'gl.link_id',
+                DB::raw('l.name as field'),
+            ];
+            $groupBy = 'gl.link_id';
+        } else if ($mode === 'generate_link') {
+            $selects = [
+                DB::raw('COUNT(gl.id) as count'),
+                DB::raw('gl.generated_link as field'),
+            ];
+            $groupBy = 'gl.id';
         }
 
         if ($user->role !== 1) {
@@ -70,6 +83,7 @@ class StatisticService
         )
             ->join('generate_links as gl', 'gl.id', '=', 'redirects.generate_link_id')
             ->join('bloggers as b', 'b.id', '=', 'gl.blogger_id')
+            ->join('links as l', 'l.id', '=', 'gl.link_id')
             ->orderByDesc('count')
             ->groupBy($groupBy);
 

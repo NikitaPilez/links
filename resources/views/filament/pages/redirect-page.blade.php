@@ -16,6 +16,8 @@
                                     <option value="geo" {{ request('mode') == 'geo' ? 'selected' : '' }}>Гео</option>
                                     <option value="blogger" {{ request('mode') == 'blogger' ? 'selected' : '' }}>Блоггер</option>
                                     <option value="scenario" {{ request('mode') == 'scenario' ? 'selected' : '' }}>Сценарий</option>
+                                    <option value="link" {{ request('link') == 'link' ? 'selected' : '' }}>Ссылке</option>
+                                    <option value="generate_link" {{ request('generate_link') == 'generate_link' ? 'selected' : '' }}>Сгенерированной ссылке</option>
                                 </select>
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                                     <svg class="h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -78,6 +80,10 @@
                                         Блоггер
                                     @elseif($mode === 'scenario')
                                         Сценарий
+                                    @elseif($mode === 'link')
+                                        Ссылка
+                                    @elseif($mode === 'generate_link')
+                                        Сгенерированная ссылка
                                     @endif
                                 </th>
                                 <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
