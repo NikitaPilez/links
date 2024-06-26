@@ -14,11 +14,13 @@ use Filament\Forms\Components\Section;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\Filter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class GenerateLinkResource extends Resource
 {
@@ -94,6 +96,7 @@ class GenerateLinkResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')->sortable()->searchable()->label('ID'),
                 TextColumn::make('link.name')->sortable()->searchable()->label('Ссылка'),
                 TextColumn::make('blogger.name')->sortable()->searchable()->label('Блоггер'),
                 TextColumn::make('domain.name')->sortable()->searchable()->label('Домен'),
@@ -142,6 +145,21 @@ class GenerateLinkResource extends Resource
                     ]),
             ])
             ->actions([
+                Action::make('downloadQr')
+                    ->label('Скачать QR')
+                    ->icon('heroicon-o-qr-code')
+                    ->action(function ($record) {
+                        $url = "https://{$record->generated_link}";
+
+                        return response()->streamDownload(
+                            function () use ($url) {
+                                echo QrCode::size(200)
+                                    ->format('png')
+                                    ->generate($url);
+                            },
+                            'qr-code.png',
+                        );
+                    }),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
