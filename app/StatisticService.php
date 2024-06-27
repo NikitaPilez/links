@@ -10,12 +10,9 @@ use Illuminate\Support\Facades\DB;
 
 class StatisticService
 {
-    public function getStatistic(string $mode, ?string $dateFrom, ?string $dateTo, ?array $geo): Builder
+    public function getStatistic(User $user, string $mode, ?string $dateFrom, ?string $dateTo, ?array $geo, ?array $bloggerIds, ?array $linkIds, ?array $generateLinkIds): Builder
     {
         $query = Redirect::query();
-
-        /** @var User $user */
-        $user = auth()->user();
 
         if ($dateFrom) {
             $query->whereDate('redirects.created_at', '>=', $dateFrom);
@@ -27,6 +24,18 @@ class StatisticService
 
         if ($geo) {
             $query->whereIn('geo', $geo);
+        }
+
+        if ($bloggerIds) {
+            $query->whereIn('gl.blogger_id', $bloggerIds);
+        }
+
+        if ($linkIds) {
+            $query->whereIn('gl.link_id', $linkIds);
+        }
+
+        if ($generateLinkIds) {
+            $query->whereIn('gl.id', $generateLinkIds);
         }
 
         if ($mode === 'date') {

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\StatisticService;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\StreamedResponse;
@@ -14,8 +15,14 @@ class RedirectController extends Controller
         $dateFrom = $request->input('date_from');
         $dateTo = $request->input('date_to');
         $geo = json_decode($request->input('geo'), true);
+        $bloggerIds = json_decode($request->input('blogger_ids'), true);
+        $linkIds = json_decode($request->input('link_ids'), true);
+        $generateLinkIds = json_decode($request->input('generate_link_ids'), true);
 
-        $query = $statisticService->getStatistic($mode, $dateFrom, $dateTo, $geo);
+        /** @var User $user */
+        $user = auth()->user();
+
+        $query = $statisticService->getStatistic($user, $mode, $dateFrom, $dateTo, $geo, $bloggerIds, $linkIds, $generateLinkIds);
 
         $headers = [
             'Content-type' => 'text/csv',
