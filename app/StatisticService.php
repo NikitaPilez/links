@@ -13,6 +13,7 @@ class StatisticService
     public function getStatistic(User $user, string $mode, ?string $dateFrom, ?string $dateTo, ?array $geo, ?array $bloggerIds, ?array $linkIds, ?array $generateLinkIds): Builder
     {
         $query = Redirect::query();
+        $order = 'count';
 
         if ($dateFrom) {
             $query->whereDate('redirects.created_at', '>=', $dateFrom);
@@ -41,9 +42,10 @@ class StatisticService
         if ($mode === 'date') {
             $selects = [
                 DB::raw('COUNT(gl.id) as count'),
-                DB::raw("DATE_FORMAT(DATE(redirects.created_at), '%d-%m-%Y') as field")
+                DB::raw("DATE(redirects.created_at) as field")
             ];
             $groupBy = 'field';
+            $order = 'field';
 
         } else if ($mode === 'geo') {
             $selects = [
@@ -93,7 +95,7 @@ class StatisticService
             ->join('generate_links as gl', 'gl.id', '=', 'redirects.generate_link_id')
             ->join('bloggers as b', 'b.id', '=', 'gl.blogger_id')
             ->join('links as l', 'l.id', '=', 'gl.link_id')
-            ->orderByDesc('count')
+            ->orderByDesc($order)
             ->groupBy($groupBy);
 
         return $query;
