@@ -41,7 +41,7 @@ class StatisticService
         if ($mode === 'date') {
             $selects = [
                 DB::raw('COUNT(gl.id) as count'),
-                DB::raw('DATE(gl.created_at) as field')
+                DB::raw("DATE_FORMAT(DATE(redirects.created_at), '%d-%m-%Y') as field")
             ];
             $groupBy = 'field';
 

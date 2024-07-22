@@ -55,7 +55,7 @@ class RedirectPage extends Page
         }
 
         return [
-            'redirects' => $query->paginate(20),
+            'redirects' => $query->paginate(10),
             'mode' => $mode,
             'allBloggers' => $allBloggers,
             'allLinks' => $allLinks,
