@@ -31,10 +31,12 @@ class MainController extends Controller
         return redirect()->to($generatedLink->link->url);
     }
 
-    public function pulseWebhook(Request $request): void
+    public function pulseWebhook(Request $request)
     {
         Log::info('pulse webhook', [
             'request' => $request->all(),
         ]);
+
+        return response()->json([]);
     }
 }
