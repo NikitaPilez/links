@@ -7,6 +7,7 @@ use App\Models\Redirect;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class MainController extends Controller
@@ -28,5 +29,12 @@ class MainController extends Controller
         ]);
 
         return redirect()->to($generatedLink->link->url);
+    }
+
+    public function pulseWebhook(Request $request): void
+    {
+        Log::info('pulse webhook', [
+            'request' => $request->all(),
+        ]);
     }
 }

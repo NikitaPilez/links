@@ -17,3 +17,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/admin/export-csv', [RedirectController::class, 'exportCsv'])->name('filament.admin.pages.export-csv');
 Route::get('/{alias}/{scenario}', [MainController::class, 'index']);
+Route::get('/pulse-webhook', [MainController::class, 'pulseWebhook'])->name('pulse.webhook');
